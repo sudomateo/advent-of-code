@@ -13,15 +13,15 @@ func TestSolve(t *testing.T) {
 		inputFile        string
 		expectedSolution day01.Solution
 	}{
-		"example input": {
-			inputFile: "test/example.txt",
+		"sample input": {
+			inputFile: "../../inputs/day01.sample.txt",
 			expectedSolution: day01.Solution{
 				Part1: 24000,
 				Part2: 45000,
 			},
 		},
 		"real input": {
-			inputFile: "test/input.txt",
+			inputFile: "../../inputs/day01.input.txt",
 			expectedSolution: day01.Solution{
 				Part1: 72240,
 				Part2: 210957,

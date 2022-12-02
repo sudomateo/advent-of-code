@@ -48,8 +48,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn example_input() {
-        let solution = match solve(String::from("test/example.txt"), 3) {
+    fn sample_input() {
+        let solution = match solve(String::from("../inputs/day01.sample.txt"), 3) {
             Ok(s) => s,
             Err(e) => panic!("{}", e),
         };
@@ -65,7 +65,7 @@ mod tests {
 
     #[test]
     fn real_input() {
-        let solution = match solve(String::from("test/input.txt"), 3) {
+        let solution = match solve(String::from("../inputs/day01.input.txt"), 3) {
             Ok(s) => s,
             Err(e) => panic!("{}", e),
         };
