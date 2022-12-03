@@ -5,53 +5,60 @@ import (
 	"io"
 )
 
-// Solution represents the solution to the Advent of Code challenge.
-type Solution struct {
-	Part1 int
-	Part2 int
-}
-
-// Solve solves the Advent of Code challenge.
-func Solve(r io.Reader) (Solution, error) {
-	var sum1 int
-	var sum2 int
+func Part1(r io.Reader) (int, error) {
+	var sum int
 
 	leftPouch := make(map[rune]struct{})
+
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		// Take note of what's in the left pouch.
+		for _, r := range line[:len(line)/2] {
+			if _, ok := leftPouch[r]; !ok {
+				leftPouch[r] = struct{}{}
+			}
+		}
+
+		// Check the right pouch for the duplicate.
+		for _, r := range line[len(line)/2:] {
+			if _, ok := leftPouch[r]; ok {
+				sum += priority(r)
+				for key := range leftPouch {
+					delete(leftPouch, key)
+				}
+				break
+			}
+		}
+	}
+
+	return sum, nil
+}
+
+func Part2(r io.Reader) (int, error) {
+	var sum int
 
 	rucksacks := [2]map[rune]struct{}{
 		make(map[rune]struct{}),
 		make(map[rune]struct{}),
 	}
+
 	group := 1
 
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		for i, r := range line {
-			// Part 1.
-			if i < len(line)/2 {
-				if _, ok := leftPouch[r]; !ok {
-					leftPouch[r] = struct{}{}
-				}
-			} else {
-				if _, ok := leftPouch[r]; ok {
-					sum1 += score(r)
-					for key := range leftPouch {
-						delete(leftPouch, key)
-					}
-				}
-			}
+		for _, r := range line {
 
-			// Part 2.
-
-			// We're on the last group, check for the common type in all groups.
+			// We're on the 3rd group, check for the duplicate in groups 1 and 2.
 			if group%3 == 0 {
 				_, inGroupOne := rucksacks[0][r]
 				_, inGroupTwo := rucksacks[1][r]
 
 				if inGroupOne && inGroupTwo {
-					sum2 += score(r)
+					sum += priority(r)
 
 					for key := range rucksacks[0] {
 						delete(rucksacks[0], key)
@@ -64,6 +71,7 @@ func Solve(r io.Reader) (Solution, error) {
 				continue
 			}
 
+			// Keep track of what's in the current group.
 			if _, ok := rucksacks[(group%3)-1][r]; !ok {
 				rucksacks[(group%3)-1][r] = struct{}{}
 			}
@@ -75,15 +83,11 @@ func Solve(r io.Reader) (Solution, error) {
 		}
 	}
 
-	s := Solution{
-		Part1: sum1,
-		Part2: sum2,
-	}
-
-	return s, nil
+	return sum, nil
 }
 
-func score(r rune) int {
+// priority calculates the priority of the given rune r.
+func priority(r rune) int {
 	if r >= 'a' && r <= 'z' {
 		return int(r - 96)
 	}
