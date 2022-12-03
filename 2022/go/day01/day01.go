@@ -8,51 +8,68 @@ import (
 	"strconv"
 )
 
-// Solution represents the solution to the Advent of Code challenge for day 1.
-type Solution struct {
-	Part1 int
-	Part2 int
-}
-
-// Solve solves the Advent of Code challenge for day 1.
-func Solve(r io.Reader, k int) (Solution, error) {
-	calories := &IntHeap{}
-	heap.Init(calories)
-
-	var sum int
+func Part1(r io.Reader) (int, error) {
+	var caloriesSum int
+	var maxCalories int
 
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
 
 		if line == "" {
-			heap.Push(calories, sum)
-			sum = 0
+			if caloriesSum > maxCalories {
+				maxCalories = caloriesSum
+			}
+			caloriesSum = 0
 			continue
 		}
 
 		n, err := strconv.Atoi(line)
 		if err != nil {
-			return Solution{}, err
+			return 0, err
 		}
 
-		sum += n
-	}
-	heap.Push(calories, sum)
-
-	if calories.Len() < k {
-		return Solution{}, fmt.Errorf("cannot count %d elves with input size %d", k, calories.Len())
+		caloriesSum += n
 	}
 
-	part1 := heap.Pop(calories).(int)
-	part2 := part1 + int(heap.Pop(calories).(int)) + int(heap.Pop(calories).(int))
+	return maxCalories, nil
+}
 
-	s := Solution{
-		Part1: part1,
-		Part2: part2,
+func Part2(r io.Reader) (int, error) {
+	calorieHeap := &IntHeap{}
+	heap.Init(calorieHeap)
+
+	var calorieSum int
+
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		if line == "" {
+			heap.Push(calorieHeap, calorieSum)
+			calorieSum = 0
+			continue
+		}
+
+		n, err := strconv.Atoi(line)
+		if err != nil {
+			return 0, err
+		}
+
+		calorieSum += n
+	}
+	heap.Push(calorieHeap, calorieSum)
+
+	if calorieHeap.Len() < 3 {
+		return 0, fmt.Errorf("cannot count 3 elves with input size %d", calorieHeap.Len())
 	}
 
-	return s, nil
+	var totalCalories int
+	for i := 0; i < 3; i++ {
+		totalCalories += heap.Pop(calorieHeap).(int)
+	}
+
+	return totalCalories, nil
 }
 
 // IntHeap is a max-heap of ints.

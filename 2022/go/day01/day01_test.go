@@ -8,42 +8,62 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestSolve(t *testing.T) {
+func TestDay1(t *testing.T) {
 	testCases := map[string]struct {
-		inputFile        string
-		expectedSolution day01.Solution
+		inputFile string
+		part1     int
+		part2     int
 	}{
-		"sample input": {
+		"SampleInput": {
 			inputFile: "../../inputs/day01.sample.txt",
-			expectedSolution: day01.Solution{
-				Part1: 24000,
-				Part2: 45000,
-			},
+			part1:     24000,
+			part2:     45000,
 		},
-		"real input": {
+		"RealInput": {
 			inputFile: "../../inputs/day01.input.txt",
-			expectedSolution: day01.Solution{
-				Part1: 72240,
-				Part2: 210957,
-			},
+			part1:     72240,
+			part2:     210957,
 		},
 	}
 
-	for testName, testCase := range testCases {
-		t.Run(testName, func(t *testing.T) {
-			f, err := os.Open(testCase.inputFile)
-			if err != nil {
-				t.Fatalf("failed opening input file %s: %v", testCase.inputFile, err)
-			}
+	t.Run("Part1", func(t *testing.T) {
+		for testName, testCase := range testCases {
+			t.Run(testName, func(t *testing.T) {
+				f, err := os.Open(testCase.inputFile)
+				if err != nil {
+					t.Fatalf("failed opening input file %s: %v", testCase.inputFile, err)
+				}
 
-			solution, err := day01.Solve(f, 3)
-			if err != nil {
-				t.Fatalf("unexpected error solving challenge: %v", err)
-			}
+				solution, err := day01.Part1(f)
+				if err != nil {
+					t.Fatalf("unexpected error solving challenge: %v", err)
+				}
 
-			if diff := cmp.Diff(solution, testCase.expectedSolution); diff != "" {
-				t.Fatalf("unexpected diff in solution:\n%s", diff)
-			}
-		})
-	}
+				if diff := cmp.Diff(solution, testCase.part1); diff != "" {
+					t.Fatalf("unexpected diff in solution:\n%s", diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Part2", func(t *testing.T) {
+		for testName, testCase := range testCases {
+			t.Run(testName, func(t *testing.T) {
+				f, err := os.Open(testCase.inputFile)
+				if err != nil {
+					t.Fatalf("failed opening input file %s: %v", testCase.inputFile, err)
+				}
+
+				solution, err := day01.Part2(f)
+				if err != nil {
+					t.Fatalf("unexpected error solving challenge: %v", err)
+				}
+
+				if diff := cmp.Diff(solution, testCase.part2); diff != "" {
+					t.Fatalf("unexpected diff in solution:\n%s", diff)
+				}
+			})
+		}
+	})
+
 }
