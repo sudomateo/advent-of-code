@@ -66,5 +66,4 @@ func TestDay2(t *testing.T) {
 			})
 		}
 	})
-
 }
