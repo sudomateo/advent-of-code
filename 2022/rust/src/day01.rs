@@ -3,14 +3,33 @@ use std::{
     io::{BufRead, BufReader},
 };
 
-#[derive(Debug)]
 #[allow(dead_code)]
-pub struct Solution {
-    part1: isize,
-    part2: isize,
+fn part1(filename: String) -> Result<isize, &'static str> {
+    let f = File::open(filename).unwrap();
+    let r = BufReader::new(f);
+
+    let mut max_calories: isize = 0;
+    let mut sum: isize = 0;
+
+    for line in r.lines() {
+        let line = line.unwrap();
+
+        if line == "" {
+            if sum > max_calories {
+                max_calories = sum;
+            }
+            sum = 0;
+            continue;
+        }
+
+        sum = sum + line.parse::<isize>().unwrap();
+    }
+
+    return Ok(max_calories);
 }
 
-pub fn solve(filename: String, k: isize) -> Result<Solution, &'static str> {
+#[allow(dead_code)]
+fn part2(filename: String) -> Result<isize, &'static str> {
     let f = File::open(filename).unwrap();
     let r = BufReader::new(f);
 
@@ -33,14 +52,11 @@ pub fn solve(filename: String, k: isize) -> Result<Solution, &'static str> {
 
     calories.sort_by(|a, b| b.cmp(a));
 
-    if calories.len() < k as usize {
+    if calories.len() < 3 {
         return Err("not enough elves to count");
     }
 
-    return Ok(Solution {
-        part1: calories[0],
-        part2: calories[0] + calories[1] + calories[2],
-    });
+    return Ok(calories[0] + calories[1] + calories[2]);
 }
 
 #[cfg(test)]
@@ -48,34 +64,20 @@ mod tests {
     use super::*;
 
     #[test]
-    fn sample_input() {
-        let solution = match solve(String::from("../inputs/day01.sample.txt"), 3) {
-            Ok(s) => s,
-            Err(e) => panic!("{}", e),
-        };
+    fn test_part1() {
+        let result = part1(String::from("../inputs/day01.sample.txt")).unwrap();
+        assert_eq!(result, 24000);
 
-        let expected_solution = Solution {
-            part1: 24000,
-            part2: 45000,
-        };
-
-        assert_eq!(solution.part1, expected_solution.part1);
-        assert_eq!(solution.part2, expected_solution.part2);
+        let result = part1(String::from("../inputs/day01.input.txt")).unwrap();
+        assert_eq!(result, 72240);
     }
 
     #[test]
-    fn real_input() {
-        let solution = match solve(String::from("../inputs/day01.input.txt"), 3) {
-            Ok(s) => s,
-            Err(e) => panic!("{}", e),
-        };
+    fn test_part2() {
+        let part2_result = part2(String::from("../inputs/day01.sample.txt")).unwrap();
+        assert_eq!(part2_result, 45000);
 
-        let expected_solution = Solution {
-            part1: 72240,
-            part2: 210957,
-        };
-
-        assert_eq!(solution.part1, expected_solution.part1);
-        assert_eq!(solution.part2, expected_solution.part2);
+        let part2_result = part2(String::from("../inputs/day01.input.txt")).unwrap();
+        assert_eq!(part2_result, 210957);
     }
 }
