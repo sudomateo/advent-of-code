@@ -1,11 +1,12 @@
 package day01_test
 
 import (
-	"aoc2022/day01"
 	"os"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+
+	"aoc2022/day01"
 )
 
 func TestDay1(t *testing.T) {
