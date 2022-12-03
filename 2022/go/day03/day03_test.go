@@ -9,7 +9,7 @@ import (
 	"aoc2022/day03"
 )
 
-func TestDay3(t *testing.T) {
+func TestDay03(t *testing.T) {
 	testCases := map[string]struct {
 		inputFile string
 		part1     int
