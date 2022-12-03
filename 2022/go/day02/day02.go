@@ -7,23 +7,17 @@ import (
 	"strings"
 )
 
-// Solution represents the solution to the Advent of Code challenge.
-type Solution struct {
-	Part1 int
-	Part2 int
-}
-
-type Choice string
+type Choice int
 
 const (
-	Rock     Choice = "rock"
-	Paper    Choice = "paper"
-	Scissors Choice = "scissors"
+	Rock Choice = iota
+	Paper
+	Scissors
 )
 
-// choiceMap maps a Choice an array of Choice values where index 0 is the
-// Choice that the map key wins against and index 1 is the Choice that the map
-// key loses against.
+// choiceMap maps a Choice to an array of Choice values where index 0 is the
+// Choice that the map key wins against and index 1 is the Choice that the
+// map key loses against.
 var choiceMap = map[Choice][2]Choice{
 	Rock:     {Scissors, Paper},
 	Paper:    {Rock, Scissors},
@@ -37,41 +31,77 @@ var scoreMap = map[Choice]int{
 	Scissors: 3,
 }
 
-// Solve solves the Advent of Code challenge.
-func Solve(r io.Reader) (Solution, error) {
-	var score1 int
-	var score2 int
+func Part1(r io.Reader) (int, error) {
+	var score int
 
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		fields := strings.Split(line, " ")
+		choices := strings.Split(line, " ")
 
-		theirChoice, err := getChoice(fields[0])
+		theirChoice, err := getChoice(choices[0])
 		if err != nil {
-			return Solution{}, err
+			return 0, err
 		}
 
-		myChoice, err := getChoice(fields[1])
+		myChoice, err := getChoice(choices[1])
 		if err != nil {
-			return Solution{}, err
+			return 0, err
 		}
 
-		score1 += scoreOne(myChoice, theirChoice)
-		score2 += scoreTwo(theirChoice, fields[1])
+		// Draw
+		if myChoice == theirChoice {
+			score += 3 + scoreMap[myChoice]
+			continue
+		}
+
+		// Win
+		if choiceMap[myChoice][0] == theirChoice {
+			score += 6 + scoreMap[myChoice]
+			continue
+		}
+
+		// Lose
+		score += scoreMap[myChoice]
 	}
 
-	s := Solution{
-		Part1: score1,
-		Part2: score2,
-	}
-
-	return s, nil
+	return score, nil
 }
 
-// getChoice returns a Choice from the string s, or an error if the string s is
-// an invalid choice.
+func Part2(r io.Reader) (int, error) {
+	var score int
+
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		choices := strings.Split(line, " ")
+
+		theirChoice, err := getChoice(choices[0])
+		if err != nil {
+			return 0, err
+		}
+
+		switch choices[1] {
+		// Lose
+		case "X":
+			score += scoreMap[choiceMap[theirChoice][0]]
+		// Draw
+		case "Y":
+			score += 3 + scoreMap[theirChoice]
+		// Win
+		case "Z":
+			score += 6 + scoreMap[choiceMap[theirChoice][1]]
+		default:
+		}
+	}
+
+	return score, nil
+}
+
+// getChoice returns a Choice from the string s, or an error if the string s
+// is an invalid choice.
 func getChoice(s string) (Choice, error) {
 	switch s {
 	case "A", "X":
@@ -81,39 +111,6 @@ func getChoice(s string) (Choice, error) {
 	case "C", "Z":
 		return Scissors, nil
 	default:
-		return Choice(""), errors.New("invalid choice")
-	}
-}
-
-// scoreOne calculates the score as required in part 1 of the problem.
-func scoreOne(myChoice Choice, theirChoice Choice) int {
-	// Draw
-	if myChoice == theirChoice {
-		return 3 + scoreMap[myChoice]
-	}
-
-	// Win
-	if choiceMap[myChoice][0] == theirChoice {
-		return 6 + scoreMap[myChoice]
-	}
-
-	// Lose
-	return scoreMap[myChoice]
-}
-
-// scoreTwo calculates the score as required in part 2 of the problem.
-func scoreTwo(theirChoice Choice, s string) int {
-	switch s {
-	// Lose
-	case "X":
-		return scoreMap[choiceMap[theirChoice][0]]
-	// Draw
-	case "Y":
-		return 3 + scoreMap[theirChoice]
-	// Win
-	case "Z":
-		return 6 + scoreMap[choiceMap[theirChoice][1]]
-	default:
-		return 0
+		return Choice(-1), errors.New("invalid choice")
 	}
 }
