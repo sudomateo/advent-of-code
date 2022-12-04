@@ -55,7 +55,7 @@ func Test{{ title .Day }}(t *testing.T) {
 					t.Fatalf("failed opening input file %s: %v", testCase.inputFile, err)
 				}
 
-				solution, err := {{ .Day }}.Part1(f)
+				solution, err := {{ .Day }}.Part2(f)
 				if err != nil {
 					t.Fatalf("unexpected error solving challenge: %v", err)
 				}
