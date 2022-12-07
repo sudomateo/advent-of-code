@@ -27,53 +27,25 @@ func Part2(r io.Reader) (int, error) {
 }
 
 func decode(datastream string, window int) int {
-	freq := make(map[string]int)
-
-	left := 0
-	right := 0
-
-	for right < len(datastream) {
-		// Build the frequency table for the window.
-		if right-left < window {
-			if _, ok := freq[string(datastream[right])]; !ok {
-				freq[string(datastream[right])] = 1
-			} else {
-				freq[string(datastream[right])]++
-			}
-			right++
-			continue
-		}
-
-		if isWindowUnique(freq) {
-			break
-		}
-
-		// Move the right side of the window forward.
-		if _, ok := freq[string(datastream[right])]; !ok {
-			freq[string(datastream[right])] = 1
-		} else {
-			freq[string(datastream[right])]++
-		}
-
-		// Move the left side of the window forward.
-		freq[string(datastream[left])]--
-		if freq[string(datastream[left])] == 0 {
-			delete(freq, string(datastream[left]))
-		}
-
-		left++
-		right++
+	if len(datastream) <= window {
+		return 0
 	}
 
-	return right
-}
+	seen := make(map[rune]struct{})
 
-func isWindowUnique(freq map[string]int) bool {
-	for _, count := range freq {
-		if count > 1 {
-			return false
+	for l, r := 0, window; r < len(datastream); l, r = l+1, r+1 {
+		for _, num := range datastream[l:r] {
+			seen[num] = struct{}{}
+		}
+
+		if len(seen) == window {
+			return l + window
+		}
+
+		for k := range seen {
+			delete(seen, k)
 		}
 	}
 
-	return true
+	return 0
 }
