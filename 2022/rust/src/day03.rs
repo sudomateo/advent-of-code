@@ -24,7 +24,7 @@ fn part1(filename: String) -> Result<isize, &'static str> {
 
         for c in line.chars().skip(line.len() / 2) {
             if let Some(c) = left_pouch.get(&c) {
-                sum = sum + priority(&c);
+                sum += priority(&c);
                 _ = left_pouch.drain();
                 break;
             };
