@@ -12,18 +12,19 @@ pub struct Solution {
 }
 
 #[derive(Debug, PartialEq, Eq, Hash)]
+#[allow(dead_code)]
 enum Choice {
     Rock,
     Paper,
     Scissors,
 }
 
-pub fn solve(filename: String) -> Result<Solution, &'static str> {
+#[allow(dead_code)]
+fn part1(filename: String) -> Result<isize, &'static str> {
     let f = File::open(filename).unwrap();
     let r = BufReader::new(f);
 
-    let mut score1: isize = 0;
-    let mut score2: isize = 0;
+    let mut score: isize = 0;
 
     for line in r.lines() {
         let line = line.unwrap();
@@ -33,14 +34,30 @@ pub fn solve(filename: String) -> Result<Solution, &'static str> {
         let their_choice = get_choice(fields[0]).unwrap();
         let my_choice = get_choice(fields[1]).unwrap();
 
-        score1 = score1 + score_one(&my_choice, &their_choice);
-        score2 = score2 + score_two(&their_choice, fields[1]);
+        score = score + score_one(&my_choice, &their_choice);
     }
 
-    return Ok(Solution {
-        part1: score1,
-        part2: score2,
-    });
+    return Ok(score);
+}
+
+#[allow(dead_code)]
+pub fn part2(filename: String) -> Result<isize, &'static str> {
+    let f = File::open(filename).unwrap();
+    let r = BufReader::new(f);
+
+    let mut score: isize = 0;
+
+    for line in r.lines() {
+        let line = line.unwrap();
+
+        let fields: Vec<&str> = line.split(" ").collect();
+
+        let their_choice = get_choice(fields[0]).unwrap();
+
+        score = score + score_two(&their_choice, fields[1]);
+    }
+
+    return Ok(score);
 }
 
 fn get_choice(s: &str) -> Option<Choice> {
@@ -102,34 +119,20 @@ mod tests {
     use super::*;
 
     #[test]
-    fn sample_input() {
-        let solution = match solve(String::from("../inputs/day02.sample.txt")) {
-            Ok(s) => s,
-            Err(e) => panic!("{}", e),
-        };
+    fn test_part1() {
+        let result = part1(String::from("../inputs/day02.sample.txt")).unwrap();
+        assert_eq!(result, 15);
 
-        let expected_solution = Solution {
-            part1: 15,
-            part2: 12,
-        };
-
-        assert_eq!(solution.part1, expected_solution.part1);
-        assert_eq!(solution.part2, expected_solution.part2);
+        let result = part1(String::from("../inputs/day02.input.txt")).unwrap();
+        assert_eq!(result, 12458);
     }
 
     #[test]
-    fn real_input() {
-        let solution = match solve(String::from("../inputs/day02.input.txt")) {
-            Ok(s) => s,
-            Err(e) => panic!("{}", e),
-        };
+    fn test_part2() {
+        let result = part2(String::from("../inputs/day02.sample.txt")).unwrap();
+        assert_eq!(result, 12);
 
-        let expected_solution = Solution {
-            part1: 12458,
-            part2: 12683,
-        };
-
-        assert_eq!(solution.part1, expected_solution.part1);
-        assert_eq!(solution.part2, expected_solution.part2);
+        let result = part2(String::from("../inputs/day02.input.txt")).unwrap();
+        assert_eq!(result, 12683);
     }
 }
