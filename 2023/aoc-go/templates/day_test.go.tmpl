@@ -1,0 +1,60 @@
+package {{ .Day }}_test
+
+import (
+	"io"
+	"os"
+	"testing"
+
+	"github.com/google/go-cmp/cmp"
+
+	"github.com/sudomateo/advent-of-code/2023/aoc-go/{{ .Day }}"
+)
+
+type testCase struct {
+	testFn         func(io.Reader) (string, error)
+	inputFile      string
+	expectedOutput string
+}
+
+func Test{{ title .Day }}(t *testing.T) {
+	tt := map[string]testCase{
+		"Part01/Sample": {
+			testFn:         {{ .Day }}.Part01,
+			inputFile:      "../../inputs/{{ .Day }}/part01-sample.txt",
+			expectedOutput: "",
+		},
+		"Part01/Final": {
+			testFn:         {{ .Day }}.Part01,
+			inputFile:      "../../inputs/{{ .Day }}/part01.txt",
+			expectedOutput: "",
+		},
+		"Part02/Sample": {
+			testFn:         {{ .Day }}.Part02,
+			inputFile:      "../../inputs/{{ .Day }}/part02-sample.txt",
+			expectedOutput: "",
+		},
+		"Part02/Final": {
+			testFn:         {{ .Day }}.Part02,
+			inputFile:      "../../inputs/{{ .Day }}/part02.txt",
+			expectedOutput: "",
+		},
+	}
+
+	for testName, testCase := range tt {
+		t.Run(testName, func(t *testing.T) {
+			f, err := os.Open(testCase.inputFile)
+			if err != nil {
+				t.Fatalf("failed opening input file %s: %v", testCase.inputFile, err)
+			}
+
+			solution, err := testCase.testFn(f)
+			if err != nil {
+				t.Fatalf("unexpected error solving challenge: %v", err)
+			}
+
+			if diff := cmp.Diff(solution, testCase.expectedOutput); diff != "" {
+				t.Fatalf("unexpected diff in solution:\n%s", diff)
+			}
+		})
+	}
+}

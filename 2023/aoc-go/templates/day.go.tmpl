@@ -1,0 +1,27 @@
+package {{ .Day }}
+
+import (
+	"bufio"
+	"fmt"
+	"io"
+)
+
+func Part01(r io.Reader) (string, error) {
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		line := scanner.Text()
+		fmt.Println(line)
+	}
+
+	return "", nil
+}
+
+func Part02(r io.Reader) (string, error) {
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		line := scanner.Text()
+		fmt.Println(line)
+	}
+
+	return "", nil
+}
