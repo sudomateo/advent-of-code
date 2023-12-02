@@ -1,4 +1,4 @@
-module github.com/sudomateo/advent-of-code/2023/aoc-go
+module github.com/sudomateo/advent-of-code/2023/go
 
 go 1.21.4
 

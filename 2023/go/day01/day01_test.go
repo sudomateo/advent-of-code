@@ -1,4 +1,4 @@
-package {{ .Day }}_test
+package day01_test
 
 import (
 	"io"
@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"github.com/sudomateo/advent-of-code/2023/aoc-go/{{ .Day }}"
+	"github.com/sudomateo/advent-of-code/2023/go/day01"
 )
 
 type testCase struct {
@@ -16,27 +16,27 @@ type testCase struct {
 	expectedOutput string
 }
 
-func Test{{ title .Day }}(t *testing.T) {
+func TestDay01(t *testing.T) {
 	tt := map[string]testCase{
 		"Part01/Sample": {
-			testFn:         {{ .Day }}.Part01,
-			inputFile:      "../../inputs/{{ .Day }}/part01-sample.txt",
-			expectedOutput: "",
+			testFn:         day01.Part01,
+			inputFile:      "../../inputs/day01/part01-sample.txt",
+			expectedOutput: "142",
 		},
 		"Part01/Final": {
-			testFn:         {{ .Day }}.Part01,
-			inputFile:      "../../inputs/{{ .Day }}/part01.txt",
-			expectedOutput: "",
+			testFn:         day01.Part01,
+			inputFile:      "../../inputs/day01/part01.txt",
+			expectedOutput: "54940",
 		},
 		"Part02/Sample": {
-			testFn:         {{ .Day }}.Part02,
-			inputFile:      "../../inputs/{{ .Day }}/part02-sample.txt",
-			expectedOutput: "",
+			testFn:         day01.Part02,
+			inputFile:      "../../inputs/day01/part02-sample.txt",
+			expectedOutput: "281",
 		},
 		"Part02/Final": {
-			testFn:         {{ .Day }}.Part02,
-			inputFile:      "../../inputs/{{ .Day }}/part02.txt",
-			expectedOutput: "",
+			testFn:         day01.Part02,
+			inputFile:      "../../inputs/day01/part02.txt",
+			expectedOutput: "54208",
 		},
 	}
 
