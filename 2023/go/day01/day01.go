@@ -10,6 +10,7 @@ import (
 	"unicode"
 )
 
+// Part01 implements the solution for part 1.
 func Part01(r io.Reader) (string, error) {
 	var sum int
 
@@ -45,6 +46,7 @@ func parseLinePart01(line string) ([]int, error) {
 	return nums, nil
 }
 
+// Part02 implements the solution for part 2.
 func Part02(r io.Reader) (string, error) {
 	var sum int
 

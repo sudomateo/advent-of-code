@@ -12,6 +12,7 @@ import (
 // within a bag.
 type cubes map[string]int
 
+// Part01 implements the solution for part 1.
 func Part01(r io.Reader) (string, error) {
 	var sum int
 
@@ -48,6 +49,7 @@ LOOP: // Labeled to short-circuit when a drawing is not possible.
 	return fmt.Sprintf("%d", sum), nil
 }
 
+// Part02 implements the solution for part 2.
 func Part02(r io.Reader) (string, error) {
 	var sum int
 
